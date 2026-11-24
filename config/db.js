@@ -19,12 +19,18 @@ const pool = mysql.createPool({
   connectionLimit: Number(process.env.DB_CONNECTION_LIMIT || (process.env.NODE_ENV === 'production' ? 3 : 10)),
   queueLimit: 0,
   dateStrings: true,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 10000,
   ssl: process.env.DB_SSL === 'true'
     ? {
-        rejectUnauthorized: true,
-        ...(process.env.DB_SSL_CA ? { ca: process.env.DB_SSL_CA.replace(/\\n/g, '\n') } : {})
+        rejectUnauthorized: false,
+        ...(process.env.DB_SSL_CA ? { ca: process.env.DB_SSL_CA.replace(/\\n/g, '\n'), rejectUnauthorized: true } : {})
       }
     : undefined
+});
+
+pool.on('error', (err) => {
+  console.error('MySQL Pool Error:', err.message);
 });
 
 module.exports = pool;

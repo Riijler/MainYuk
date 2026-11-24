@@ -17,11 +17,13 @@ if (process.env.NODE_ENV === 'production' && (!sessionSecret || sessionSecret.le
   throw new Error('SESSION_SECRET production wajib diatur dengan minimal 32 karakter acak.');
 }
 
+const diVercel = process.env.VERCEL === '1' || process.env.VERCEL === 'true';
+
 const sessionStore = new MySQLStore({
-  clearExpired: true,
-  checkExpirationInterval: 15 * 60 * 1000,
+  clearExpired: !diVercel,
+  checkExpirationInterval: diVercel ? 0 : 15 * 60 * 1000,
   expiration: 8 * 60 * 60 * 1000,
-  createDatabaseTable: true
+  createDatabaseTable: false
 }, pool);
 
 app.set('view engine', 'ejs');
