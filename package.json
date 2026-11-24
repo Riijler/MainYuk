@@ -22,7 +22,7 @@
     "express-session": "^1.18.1",
     "multer": "^2.5.0",
     "mysql2": "^3.24.6",
-    "pdfkit": "^0.21.0"
+    "pdfkit": "^0.16.0"
   },
   "devDependencies": {
     "tailwindcss": "3.4.17",

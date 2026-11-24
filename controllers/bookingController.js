@@ -2,7 +2,6 @@ const lapanganModel = require('../models/lapanganModel');
 const tarifModel = require('../models/tarifModel');
 const bookingModel = require('../models/bookingModel');
 const userModel = require('../models/userModel');
-const { PDFDocument } = require('pdfkit');
 
 const BATAS_PER_HALAMAN = 10;
 
@@ -206,6 +205,7 @@ async function unduhBuktiPdf(req, res) {
       return res.status(404).render('pesan', { judul: 'Bukti tidak ditemukan', pesan: 'Booking tidak ditemukan.' });
     }
 
+    const PDFDocument = require('pdfkit');
     const dokumen = new PDFDocument({ size: 'A4', margin: 52 });
     const namaAman = booking.kode_booking.replace(/[^a-zA-Z0-9-]/g, '');
     res.setHeader('Content-Type', 'application/pdf');
