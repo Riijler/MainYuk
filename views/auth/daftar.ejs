@@ -1,0 +1,69 @@
+<%- include('../partials/header', { judul }) %>
+<%- include('../partials/navbar', { halamanAuth }) %>
+
+<main id="konten" class="mx-auto grid w-full max-w-7xl flex-1 px-6 py-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:py-14">
+  <section class="relative hidden min-h-[680px] flex-col justify-between overflow-hidden border-2 border-tinta bg-tinta p-10 text-kertas lg:flex" aria-label="Daftar penyewa MainYuk">
+    <div class="absolute -bottom-24 -left-24 h-80 w-80 rounded-full border-[32px] border-lime/20"></div>
+    <div class="relative">
+      <p class="font-mono text-xs font-bold uppercase tracking-[0.2em] text-lime">MAINYUK / PENYEWA</p>
+      <h1 class="mt-8 text-5xl font-black uppercase leading-[0.95]">Satu akun.<br>Banyak waktu<br>buat main.</h1>
+      <p class="mt-5 max-w-sm text-kertas/75">Buat akun penyewa untuk mulai mencari lapangan dan mengatur jadwal bermain.</p>
+    </div>
+    <div class="relative grid grid-cols-2 gap-3">
+      <div class="border-2 border-lime p-4"><p class="font-mono text-[10px] font-bold uppercase text-lime">ISI DATA</p><p class="mt-2 font-bold">Nama dan kontak</p></div>
+      <div class="border-2 border-lime bg-lime p-4 text-tinta"><p class="font-mono text-[10px] font-bold uppercase">BUAT AKUN</p><p class="mt-2 font-bold">Password aman</p></div>
+      <div class="col-span-2 border-2 border-lime p-4">
+        <svg viewBox="0 0 400 118" class="w-full" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="3" y="3" width="394" height="112" stroke="#c6f26b" stroke-width="3" />
+          <path d="M200 3V115M3 59H43V30H3M3 88H43V59M397 59H357V30H397M397 88H357V59" stroke="#c6f26b" stroke-width="3" />
+          <circle cx="200" cy="59" r="24" stroke="#c6f26b" stroke-width="3" />
+        </svg>
+      </div>
+    </div>
+    <p class="relative font-mono text-xs uppercase text-kertas/60">Daftar akun menghasilkan role penyewa.</p>
+  </section>
+
+  <section class="mx-auto w-full max-w-xl lg:px-14" aria-labelledby="judul-daftar">
+    <div class="mb-7">
+      <p class="mb-3 font-mono text-xs font-bold uppercase tracking-[0.2em]">MULAI DARI SINI</p>
+      <h2 id="judul-daftar" class="text-4xl font-black uppercase sm:text-5xl">Buat akun</h2>
+      <p class="mt-3 text-neutral-700">Isi data penyewa. Semua kolom wajib diisi.</p>
+    </div>
+
+    <% if (pesanError) { %>
+      <div role="alert" class="mb-5 border-2 border-tinta bg-oranye p-4 font-semibold"><%= pesanError %></div>
+    <% } %>
+
+    <form action="/daftar" method="post" class="kartu-kertas space-y-4 p-6 sm:p-8">
+      <div>
+        <label for="nama" class="label-form">Nama lengkap</label>
+        <input id="nama" name="nama" type="text" class="input-form" value="<%= nilai.nama || '' %>" autocomplete="name" maxlength="100" required>
+      </div>
+      <div>
+        <label for="username" class="label-form">Username</label>
+        <input id="username" name="username" type="text" class="input-form" value="<%= nilai.username || '' %>" autocomplete="username" minlength="3" maxlength="50" pattern="[A-Za-z0-9_]+" required>
+        <p class="mt-1 font-mono text-[10px] text-neutral-600">3–50 karakter: huruf, angka, garis bawah.</p>
+      </div>
+      <div>
+        <label for="no_hp" class="label-form">Nomor HP</label>
+        <input id="no_hp" name="no_hp" type="tel" class="input-form" value="<%= nilai.noHp || '' %>" autocomplete="tel" maxlength="15" inputmode="tel" required>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label for="password" class="label-form">Password</label>
+          <input id="password" name="password" type="password" class="input-form" autocomplete="new-password" minlength="8" maxlength="72" required>
+        </div>
+        <div>
+          <label for="konfirmasi_password" class="label-form">Ulangi password</label>
+          <input id="konfirmasi_password" name="konfirmasi_password" type="password" class="input-form" autocomplete="new-password" minlength="8" maxlength="72" required>
+        </div>
+      </div>
+      <button type="submit" class="tombol-utama w-full">Daftarkan akun <span aria-hidden="true" class="ml-2">→</span></button>
+      <p class="text-center text-sm">Sudah punya akun? <a class="font-bold underline decoration-2 underline-offset-4" href="/login">Masuk</a></p>
+    </form>
+  </section>
+</main>
+
+<%- include('../partials/footer') %>
+</body>
+</html>

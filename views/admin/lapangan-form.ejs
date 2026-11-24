@@ -1,0 +1,25 @@
+<%- include('../partials/header', { judul }) %>
+<%- include('../partials/navbar') %>
+<main id="konten" class="mx-auto w-full max-w-7xl flex-1 px-6 py-10">
+  <p class="font-mono text-xs font-bold uppercase tracking-widest">ADMIN / INVENTARIS</p>
+  <h1 class="mt-2 text-4xl font-black uppercase"><%= judul %></h1>
+  <%- include('nav', { urlHalaman: '/admin/lapangan' }) %>
+  <section class="max-w-3xl border-2 border-tinta bg-kertas p-6 shadow-keras sm:p-8">
+    <% if (pesanError) { %><p role="alert" class="mb-5 border-2 border-tinta bg-oranye p-3 font-semibold"><%= pesanError %></p><% } %>
+    <form action="<%= lapangan ? `/admin/lapangan/${lapangan.id}/edit` : '/admin/lapangan/baru' %>" method="post" enctype="multipart/form-data" class="grid gap-5 sm:grid-cols-2">
+      <div class="sm:col-span-2"><label for="nama" class="label-form">Nama lapangan</label><input id="nama" name="nama" class="input-form" maxlength="100" value="<%= lapangan ? lapangan.nama : '' %>" required></div>
+      <div><label for="jenis_id" class="label-form">Jenis lapangan</label><select id="jenis_id" name="jenis_id" class="input-form" required><option value="">Pilih jenis</option><% daftarJenis.forEach((jenis) => { %><option value="<%= jenis.id %>" <%= lapangan && lapangan.jenis_id === jenis.id ? 'selected' : '' %>><%= jenis.nama %></option><% }) %></select></div>
+      <div><label for="status" class="label-form">Status</label><select id="status" name="status" class="input-form"><option value="aktif" <%= !lapangan || lapangan.status === 'aktif' ? 'selected' : '' %>>Aktif</option><option value="nonaktif" <%= lapangan && lapangan.status === 'nonaktif' ? 'selected' : '' %>>Nonaktif</option></select></div>
+      <div><label for="jam_buka" class="label-form">Jam buka</label><input id="jam_buka" name="jam_buka" type="time" class="input-form" value="<%= lapangan ? String(lapangan.jam_buka).slice(0, 5) : '08:00' %>" required></div>
+      <div><label for="jam_tutup" class="label-form">Jam tutup</label><input id="jam_tutup" name="jam_tutup" type="time" class="input-form" value="<%= lapangan ? String(lapangan.jam_tutup).slice(0, 5) : '22:00' %>" required></div>
+      <div><label for="jam_mulai_lampu" class="label-form">Lampu mulai</label><input id="jam_mulai_lampu" name="jam_mulai_lampu" type="time" class="input-form" value="<%= lapangan ? String(lapangan.jam_mulai_lampu).slice(0, 5) : '17:00' %>" required></div>
+      <div><label for="gambar" class="label-form">Foto lapangan (opsional)</label><input id="gambar" name="gambar" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" class="block min-h-11 w-full border-2 border-tinta bg-white p-2 text-sm file:mr-3 file:border-0 file:bg-lime file:px-2 file:py-1"></div>
+      <% if (lapangan && lapangan.gambar) { %><div class="flex items-center gap-3"><img src="<%= urlGambar(lapangan.gambar) %>" alt="Foto saat ini" class="h-16 w-24 border-2 border-tinta object-cover"><label class="flex items-center gap-2 text-sm"><input type="checkbox" name="hapus_gambar" value="1"> Hapus foto saat ini</label></div><% } %>
+      <p class="font-mono text-[10px] font-bold uppercase text-neutral-600 sm:col-span-2">Format JPG/PNG · Maksimal 2 MB</p>
+      <div class="flex flex-wrap gap-3 sm:col-span-2"><button class="tombol-utama">Simpan lapangan</button><a href="/admin/lapangan" class="inline-flex min-h-11 items-center px-3 font-bold underline">Kembali</a></div>
+    </form>
+  </section>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

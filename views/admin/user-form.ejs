@@ -1,0 +1,21 @@
+<%- include('../partials/header', { judul }) %>
+<%- include('../partials/navbar') %>
+<main id="konten" class="mx-auto w-full max-w-7xl flex-1 px-6 py-10">
+  <p class="font-mono text-xs font-bold uppercase tracking-widest">ADMIN / AKUN</p>
+  <h1 class="mt-2 text-4xl font-black uppercase"><%= judul %></h1>
+  <%- include('nav', { urlHalaman: '/admin/user' }) %>
+  <section class="max-w-2xl border-2 border-tinta bg-kertas p-6 shadow-keras sm:p-8">
+    <% if (pesanError) { %><p role="alert" class="mb-5 border-2 border-tinta bg-oranye p-3 font-semibold"><%= pesanError %></p><% } %>
+    <form action="<%= pengguna ? `/admin/user/${pengguna.id}/edit` : '/admin/user/baru' %>" method="post" class="space-y-4">
+      <div><label for="nama" class="label-form">Nama lengkap</label><input id="nama" name="nama" class="input-form" maxlength="100" value="<%= pengguna ? pengguna.nama : '' %>" required></div>
+      <div><label for="username" class="label-form">Username</label><input id="username" name="username" class="input-form" value="<%= pengguna ? pengguna.username : '' %>" <%= pengguna ? 'readonly' : '' %> minlength="3" maxlength="50" pattern="[A-Za-z0-9_]+" required></div>
+      <div><label for="no_hp" class="label-form">Nomor HP</label><input id="no_hp" name="no_hp" type="tel" class="input-form" maxlength="15" value="<%= pengguna ? (pengguna.no_hp || pengguna.noHp) : '' %>" required></div>
+      <div><label for="role" class="label-form">Role</label><select id="role" name="role" class="input-form" required><% ['penyewa', 'petugas', 'admin'].forEach((role) => { %><option value="<%= role %>" <%= pengguna && pengguna.role === role ? 'selected' : '' %>><%= role %></option><% }) %></select></div>
+      <div><label for="password" class="label-form"><%= pengguna ? 'Password baru (opsional)' : 'Password' %></label><input id="password" name="password" type="password" class="input-form" autocomplete="new-password" minlength="8" maxlength="72" <%= pengguna ? '' : 'required' %>><% if (pengguna) { %><p class="mt-1 text-xs text-neutral-600">Kosongkan jika tidak ingin mengganti password.</p><% } %></div>
+      <div class="flex flex-wrap gap-3 pt-2"><button class="tombol-utama">Simpan pengguna</button><a href="/admin/user" class="inline-flex min-h-11 items-center px-3 font-bold underline">Kembali</a></div>
+    </form>
+  </section>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

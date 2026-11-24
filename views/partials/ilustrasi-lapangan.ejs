@@ -1,0 +1,27 @@
+<svg viewBox="0 0 360 200" class="<%= kelas || 'w-full' %>" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <% if (/padel/i.test(jenis || '')) { %>
+    <rect x="82" y="10" width="196" height="180" fill="#c6f26b" stroke="#111" stroke-width="4" />
+    <path d="M82 100H278M82 50H278M82 150H278M180 10V50M180 150V190" stroke="#111" stroke-width="3" />
+    <path d="M98 10V190M262 10V190" stroke="#111" stroke-width="2" stroke-dasharray="4 4" />
+    <path d="M76 10V190M284 10V190" stroke="#111" stroke-width="6" />
+    <path d="M78 34H82M78 66H82M78 98H82M78 130H82M78 162H82M278 34H282M278 66H282M278 98H282M278 130H282M278 162H282" stroke="#111" stroke-width="3" />
+    <path d="M72 100H288" stroke="#111" stroke-width="2" stroke-dasharray="3 3" />
+  <% } else if (/badminton|bulu\s*tangkis/i.test(jenis || '')) { %>
+    <rect x="32" y="24" width="296" height="152" fill="#c6f26b" stroke="#111" stroke-width="4" />
+    <path d="M32 42H328M32 158H328M70 24V176M290 24V176M32 100H328M116 42V100M244 42V100M116 100V158M244 100V158" stroke="#111" stroke-width="3" />
+    <path d="M26 100H334" stroke="#111" stroke-width="2" stroke-dasharray="3 3" />
+  <% } else if (/tenis|tennis/i.test(jenis || '')) { %>
+    <rect x="32" y="24" width="296" height="152" fill="#c6f26b" stroke="#111" stroke-width="4" />
+    <path d="M70 24V176M290 24V176M70 42H290M70 158H290M180 42V158" stroke="#111" stroke-width="3" />
+    <path d="M26 100H334" stroke="#111" stroke-width="2" stroke-dasharray="3 3" />
+  <% } else if (/voli|volleyball/i.test(jenis || '')) { %>
+    <rect x="32" y="24" width="296" height="152" fill="#c6f26b" stroke="#111" stroke-width="4" />
+    <path d="M180 24V176M115 24V176M245 24V176" stroke="#111" stroke-width="3" />
+    <path d="M174 24V176M186 24V176" stroke="#111" stroke-width="1.5" stroke-dasharray="3 3" />
+  <% } else { %>
+    <rect x="10" y="20" width="340" height="160" stroke="#111" stroke-width="3" />
+    <path d="M180 20V180" stroke="#111" stroke-width="3" />
+    <circle cx="180" cy="100" r="30" stroke="#111" stroke-width="3" />
+    <path d="M10 60H55V140H10M350 60H305V140H350" stroke="#111" stroke-width="3" />
+  <% } %>
+</svg>

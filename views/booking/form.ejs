@@ -1,0 +1,52 @@
+<%- include('../partials/header', { judul }) %>
+<%- include('../partials/navbar') %>
+<main id="konten" class="mx-auto w-full max-w-7xl flex-1 px-6 py-10">
+  <p class="font-mono text-xs font-bold uppercase tracking-widest">BOOKING / PENYEWA</p>
+  <h1 class="mt-2 text-4xl font-black uppercase sm:text-5xl">Atur waktu main</h1>
+  <p class="mt-3 max-w-2xl text-neutral-700">Pilih tanggal, lapangan, dan durasi. Total biaya dihitung per jam termasuk penerangan.</p>
+
+  <% if (pesanError) { %><p role="alert" class="mt-6 border-2 border-tinta bg-oranye p-4 font-semibold"><%= pesanError %></p><% } %>
+  <% if (pesanPenyewaBaru) { %><p role="status" class="mt-6 border-2 border-tinta bg-lime p-4 font-semibold">Data penyewa baru tersimpan. Lengkapi booking atas namanya di bawah.</p><% } %>
+  <% if (!daftarLapangan.length) { %>
+    <section class="mt-8 border-2 border-tinta bg-kertas p-7 shadow-keras"><h2 class="text-2xl font-black uppercase">Belum ada lapangan aktif</h2><p class="mt-2">Silakan kembali setelah admin menambahkan lapangan aktif beserta tarifnya.</p><a href="/jadwal" class="tombol-utama mt-5">Lihat jadwal</a></section>
+  <% } else { %>
+    <div class="mt-8 grid items-start gap-8 lg:grid-cols-[1fr_360px]">
+      <form id="form-booking" data-atas-nama-penyewa="<%= atasNamaPenyewa ? '1' : '0' %>" action="<%= atasNamaPenyewa ? '/petugas/booking/baru' : '/booking/baru' %>" method="post" class="space-y-5 border-2 border-tinta bg-kertas p-6 shadow-keras sm:p-8">
+        <% if (atasNamaPenyewa) { %>
+          <div><label for="user_id" class="label-form">Pilih penyewa</label><select id="user_id" name="user_id" class="input-form" required><option value="">Pilih penyewa</option><% daftarPenyewa.forEach((penyewa) => { %><option value="<%= penyewa.id %>" <%= String(penyewa.id) === nilai.userId ? 'selected' : '' %>><%= penyewa.nama %><%= penyewa.no_hp ? ` / ${penyewa.no_hp}` : '' %></option><% }) %></select><a class="mt-2 inline-flex font-bold underline" href="/petugas/penyewa/baru?lapangan_id=<%= encodeURIComponent(nilai.lapanganId) %>&amp;tanggal=<%= encodeURIComponent(nilai.tanggal) %>&amp;jam_mulai=<%= encodeURIComponent(nilai.jamMulai) %>">+ Tambahkan penyewa baru</a></div>
+        <% } %>
+        <div><label for="tanggal" class="label-form">Tanggal booking</label><input id="tanggal" name="tanggal" type="date" class="input-form" value="<%= nilai.tanggal %>" required></div>
+        <div>
+          <label for="lapangan_id" class="label-form">Lapangan</label>
+          <select id="lapangan_id" name="lapangan_id" class="input-form" required>
+            <% daftarLapangan.forEach((lapangan) => { %>
+              <option value="<%= lapangan.id %>" data-buka="<%= String(lapangan.jam_buka).slice(0, 5) %>" data-tutup="<%= String(lapangan.jam_tutup).slice(0, 5) %>" data-lampu="<%= String(lapangan.jam_mulai_lampu).slice(0, 5) %>" data-tarif-weekday-tanpa-lampu="<%= lapangan.tarif.weekday_0 ?? '' %>" data-tarif-weekday-pakai-lampu="<%= lapangan.tarif.weekday_1 ?? '' %>" data-tarif-weekend-tanpa-lampu="<%= lapangan.tarif.weekend_0 ?? '' %>" data-tarif-weekend-pakai-lampu="<%= lapangan.tarif.weekend_1 ?? '' %>" <%= String(lapangan.id) === nilai.lapanganId ? 'selected' : '' %>><%= lapangan.nama %> / <%= lapangan.jenis_nama %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div><label for="jam_mulai" class="label-form">Jam mulai</label><select id="jam_mulai" name="jam_mulai" data-jam-awal="<%= nilai.jamMulai %>" class="input-form" required></select><p id="pesan-jam-terisi" class="mt-2 text-xs font-semibold text-neutral-700" aria-live="polite"></p></div>
+          <div><label for="durasi_jam" class="label-form">Durasi</label><select id="durasi_jam" name="durasi_jam" data-durasi-awal="<%= nilai.durasiJam %>" class="input-form" required></select></div>
+        </div>
+        <input id="jam_selesai" name="jam_selesai" type="hidden" value="">
+        <div class="flex flex-wrap gap-3 border-t-2 border-tinta pt-5"><button id="tombol-simpan-booking" class="tombol-utama disabled:cursor-not-allowed disabled:opacity-50">Buat booking <span aria-hidden="true" class="ml-2">→</span></button><a href="/jadwal" class="inline-flex min-h-11 items-center px-3 font-bold underline">Kembali ke jadwal</a></div>
+      </form>
+
+      <aside class="border-2 border-tinta bg-lime p-6 shadow-keras lg:sticky lg:top-6" aria-live="polite" aria-labelledby="judul-ringkasan">
+        <p class="font-mono text-xs font-bold uppercase tracking-widest">SEBELUM KONFIRMASI</p>
+        <h2 id="judul-ringkasan" class="mt-2 text-2xl font-black uppercase">Ringkasan biaya</h2>
+        <dl class="mt-6 space-y-4 border-t-2 border-tinta pt-5">
+          <div class="flex justify-between gap-4"><dt class="font-mono text-xs font-bold uppercase">Durasi</dt><dd id="ringkasan-durasi" class="font-bold">1 jam</dd></div>
+          <div class="flex justify-between gap-4"><dt class="font-mono text-xs font-bold uppercase">Jam selesai</dt><dd id="ringkasan-selesai" class="font-bold">—</dd></div>
+          <div class="flex justify-between gap-4"><dt class="font-mono text-xs font-bold uppercase">Penerangan</dt><dd id="ringkasan-lampu" class="font-bold">—</dd></div>
+        </dl>
+        <div class="mt-6 border-t-2 border-tinta pt-4"><p class="font-mono text-xs font-bold uppercase">ESTIMASI TOTAL</p><p id="ringkasan-total" class="mt-1 text-3xl font-black">—</p></div>
+        <p class="mt-4 text-xs leading-relaxed">Tarif akhir disimpan kembali oleh server sebelum booking dibuat.</p>
+      </aside>
+    </div>
+  <% } %>
+</main>
+<script src="/js/booking-form.js" defer></script>
+<%- include('../partials/footer') %>
+</body>
+</html>

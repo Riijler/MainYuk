@@ -1,0 +1,24 @@
+<%- include('../partials/header', { judul }) %>
+<%- include('../partials/navbar') %>
+<main id="konten" class="mx-auto w-full max-w-7xl flex-1 px-6 py-10">
+  <p class="font-mono text-xs font-bold uppercase tracking-widest">PETUGAS / PENYEWA</p>
+  <div class="mt-2 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.75fr)]">
+    <section>
+      <h1 class="text-4xl font-black uppercase sm:text-5xl">Tambah penyewa</h1>
+      <p class="mt-3 max-w-2xl text-neutral-700">Catat nama dan nomor kontak penyewa. Petugas bisa langsung membuat booking atas namanya.</p>
+      <% if (pesanError) { %><p role="alert" class="mt-6 border-2 border-tinta bg-oranye p-4 font-semibold"><%= pesanError %></p><% } %>
+      <form action="/petugas/penyewa/baru" method="post" class="mt-7 space-y-5 border-2 border-tinta bg-kertas p-6 shadow-keras sm:p-8">
+        <div><label for="nama" class="label-form">Nama penyewa</label><input id="nama" name="nama" class="input-form" maxlength="100" autocomplete="name" value="<%= nama %>" required></div>
+        <div><label for="no_hp" class="label-form">Nomor HP</label><input id="no_hp" name="no_hp" type="tel" class="input-form" inputmode="tel" autocomplete="tel" pattern="\+?[0-9]{8,15}" maxlength="16" placeholder="Contoh: 081234567890" value="<%= noHp %>" required><p class="mt-2 text-xs text-neutral-600">Masukkan 8–15 angka, boleh diawali tanda +.</p></div>
+        <input type="hidden" name="lapangan_id" value="<%= nilai.lapanganId || '' %>">
+        <input type="hidden" name="tanggal" value="<%= nilai.tanggal || '' %>">
+        <input type="hidden" name="jam_mulai" value="<%= nilai.jamMulai || '' %>">
+        <div class="flex flex-wrap gap-3 border-t-2 border-tinta pt-5"><button class="tombol-utama">Simpan dan lanjut booking <span aria-hidden="true" class="ml-2">→</span></button><a href="/petugas/booking/baru" class="inline-flex min-h-11 items-center px-3 font-bold underline">Kembali</a></div>
+      </form>
+    </section>
+    <aside class="h-fit border-2 border-tinta bg-lime p-6 shadow-keras"><p class="font-mono text-xs font-bold uppercase tracking-widest">UNTUK BOOKING LOKET</p><h2 class="mt-2 text-2xl font-black uppercase">Tidak perlu daftar akun</h2><p class="mt-3 leading-relaxed">Data ini dicatat petugas sebagai penyewa. Sistem membuat identitas internal otomatis, jadi penyewa tidak perlu membuat username atau password.</p></aside>
+  </div>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

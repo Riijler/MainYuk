@@ -1,0 +1,80 @@
+<%- include('../partials/header', { judul }) %>
+<%- include('../partials/navbar') %>
+<main id="konten" class="mx-auto w-full max-w-7xl flex-1 px-6 py-10">
+  <p class="font-mono text-xs font-bold uppercase tracking-widest">JADWAL / PENYEWAAN LAPANGAN</p>
+  <div class="mt-2 flex flex-wrap items-end justify-between gap-4">
+    <div><h1 class="text-4xl font-black uppercase sm:text-5xl">Pilih waktu main</h1><p class="mt-3 text-neutral-700">Lihat slot per jam, jam lampu, dan tarif lapangan.</p></div>
+    <a href="<%= pengguna.role === 'penyewa' ? '/booking/baru' : '/petugas/booking/baru' %>" class="tombol-utama">Buat booking <span aria-hidden="true" class="ml-2">+</span></a>
+    <span class="border-2 border-tinta bg-lime px-3 py-2 font-mono text-xs font-bold uppercase"><%= jumlahSlot %> slot ditampilkan</span>
+  </div>
+
+  <% if (pesanTanggal) { %><p role="alert" class="mt-6 border-2 border-tinta bg-kuning p-3 font-semibold"><%= pesanTanggal %></p><% } %>
+
+  <form action="/jadwal" method="get" class="mt-8 grid gap-4 border-2 border-tinta bg-kertas p-5 shadow-keras sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_auto] lg:items-end">
+    <div><label for="tanggal" class="label-form">Tanggal main</label><input id="tanggal" name="tanggal" type="date" class="input-form" value="<%= tanggal %>" required></div>
+    <div><label for="jenis" class="label-form">Jenis lapangan</label><select id="jenis" name="jenis" class="input-form"><option value="">Semua jenis</option><% daftarJenis.forEach((jenis) => { %><option value="<%= jenis.id %>" <%= String(jenisTerpilih) === String(jenis.id) ? 'selected' : '' %>><%= jenis.nama %></option><% }) %></select></div>
+    <div><label for="lapangan" class="label-form">Lapangan</label><select id="lapangan" name="lapangan" class="input-form"><option value="">Semua lapangan</option><% daftarLapanganFilter.forEach((lapangan) => { %><option value="<%= lapangan.id %>" <%= String(lapanganTerpilih) === String(lapangan.id) ? 'selected' : '' %>><%= lapangan.nama %></option><% }) %></select></div>
+    <button class="tombol-utama">Tampilkan jadwal <span aria-hidden="true" class="ml-2">→</span></button>
+  </form>
+
+  <div class="mt-8 flex flex-wrap gap-4 font-mono text-xs font-bold uppercase">
+    <span class="flex items-center gap-2"><i class="h-4 w-4 border-2 border-tinta bg-white"></i>Kosong</span>
+    <span class="flex items-center gap-2"><i class="h-4 w-4 border-2 border-tinta bg-[repeating-linear-gradient(135deg,#d4d4d4_0px,#d4d4d4_4px,#f5f5f5_4px,#f5f5f5_8px)]"></i>Terisi</span>
+    <span class="flex items-center gap-2"><i class="h-4 w-4 border-2 border-tinta bg-kuning"></i>Waktu lampu</span>
+  </div>
+
+  <section class="mt-5 space-y-8" aria-label="Daftar jadwal lapangan">
+    <% daftarLapangan.forEach((lapangan) => { %>
+      <article class="overflow-hidden border-2 border-tinta bg-kertas shadow-keras">
+        <div class="grid lg:grid-cols-[300px_1fr]">
+          <div class="relative min-h-52 border-b-2 border-tinta bg-lime lg:border-b-0 lg:border-r-2">
+            <%- include('../partials/carousel-lapangan', { lapangan, jenis: lapangan.jenis_nama }) %>
+            <span class="absolute left-4 top-4 border-2 border-tinta bg-kertas px-2 py-1 font-mono text-[10px] font-bold uppercase"><%= lapangan.jenis_nama %></span>
+          </div>
+
+          <div class="p-5 sm:p-6">
+            <div class="flex flex-wrap items-start justify-between gap-4 border-b-2 border-tinta pb-4">
+              <div><p class="font-mono text-xs font-bold uppercase tracking-widest text-neutral-600">LAPANGAN AKTIF</p><h2 class="mt-1 text-2xl font-black uppercase sm:text-3xl"><%= lapangan.nama %></h2><a href="/jadwal/mingguan?lapangan=<%= lapangan.id %>&tanggal=<%= encodeURIComponent(tanggal) %>" class="mt-2 inline-block text-sm font-bold underline decoration-2 underline-offset-4">Lihat 7 hari ↗</a></div>
+              <div class="flex flex-wrap gap-2 font-mono text-[10px] font-bold uppercase"><span class="border-2 border-tinta px-2 py-1">Buka <%= String(lapangan.jam_buka).slice(0, 5) %></span><span class="border-2 border-tinta px-2 py-1">Tutup <%= String(lapangan.jam_tutup).slice(0, 5) %></span><span class="border-2 border-tinta bg-kuning px-2 py-1">Lampu <%= String(lapangan.jam_mulai_lampu).slice(0, 5) %></span></div>
+            </div>
+
+            <div class="mt-5">
+              <h3 class="mb-3 font-mono text-xs font-bold uppercase tracking-widest">SLOT PER JAM</h3>
+              <% if (lapangan.slot.length) { %>
+                <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
+                  <% lapangan.slot.forEach((slot) => { %>
+                    <div class="flex min-h-14 items-center justify-between gap-2 border-2 border-tinta px-3 py-2 <%= slot.terisi ? 'bg-[repeating-linear-gradient(135deg,#d4d4d4_0px,#d4d4d4_5px,#f5f5f5_5px,#f5f5f5_10px)]' : (slot.pakaiLampu ? 'bg-kuning' : 'bg-white') %>">
+                      <div><p class="font-mono text-xs font-bold"><%= slot.jamMulai %>–<%= slot.jamSelesai %></p><p class="mt-1 font-mono text-[9px] font-bold uppercase"><%= slot.terisi ? 'Terisi' : 'Kosong' %></p></div>
+                      <% if (slot.pakaiLampu) { %><span class="border border-tinta bg-kertas px-1 py-0.5 font-mono text-[8px] font-bold uppercase">Lampu</span><% } %>
+                    </div>
+                  <% }) %>
+                </div>
+              <% } else { %>
+                <p class="border-2 border-tinta bg-neutral-100 p-4">Jam operasional belum memiliki slot satu jam penuh.</p>
+              <% } %>
+            </div>
+
+            <div class="mt-5 border-t-2 border-tinta pt-4">
+              <h3 class="mb-3 font-mono text-xs font-bold uppercase tracking-widest">TARIF PER JAM</h3>
+              <% if (lapangan.tarif.length) { %>
+                <div class="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+                  <% lapangan.tarif.forEach((tarif) => { %>
+                    <div class="border-2 border-tinta p-3 <%= tarif.pakaiLampu ? 'bg-kuning' : 'bg-white' %>"><p class="font-mono text-[10px] font-bold uppercase"><%= tarif.labelHari %> / <%= tarif.labelLampu %></p><p class="mt-1 text-lg font-black">Rp<%= tarif.harga %></p></div>
+                  <% }) %>
+                </div>
+              <% } else { %><p class="border-2 border-tinta bg-white p-3">Tarif belum diatur.</p><% } %>
+            </div>
+          </div>
+        </div>
+      </article>
+    <% }) %>
+
+    <% if (!daftarLapangan.length) { %>
+      <div class="border-2 border-tinta bg-kertas p-8 text-center shadow-keras"><p class="font-mono text-xs font-bold uppercase tracking-widest">BELUM ADA HASIL</p><h2 class="mt-2 text-2xl font-black uppercase">Tidak ada lapangan aktif untuk filter ini.</h2><p class="mt-2 text-neutral-700">Coba pilih jenis atau lapangan yang lain.</p></div>
+    <% } %>
+  </section>
+</main>
+<%- include('../partials/footer') %>
+<script src="/js/carousel-lapangan.js" defer></script>
+</body>
+</html>

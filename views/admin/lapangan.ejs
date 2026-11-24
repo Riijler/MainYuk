@@ -1,0 +1,33 @@
+<%- include('../partials/header', { judul }) %>
+<%- include('../partials/navbar') %>
+<main id="konten" class="mx-auto w-full max-w-7xl flex-1 px-6 py-10">
+  <p class="font-mono text-xs font-bold uppercase tracking-widest">ADMIN / INVENTARIS</p>
+  <div class="mt-2 flex flex-wrap items-end justify-between gap-4">
+    <div><h1 class="text-4xl font-black uppercase sm:text-5xl">Data lapangan</h1><p class="mt-3 text-neutral-700">Atur fasilitas, jam operasional, status, dan foto.</p></div>
+    <a href="/admin/lapangan/baru" class="tombol-utama">Tambah lapangan <span aria-hidden="true" class="ml-2">+</span></a>
+  </div>
+  <%- include('nav', { urlHalaman: '/admin/lapangan' }) %>
+  <% if (pesan) { %><p role="status" class="mb-5 border-2 border-tinta bg-lime p-3 font-semibold"><%= pesan %></p><% } %>
+
+  <section class="overflow-x-auto border-2 border-tinta bg-kertas" role="region" tabindex="0" aria-label="Daftar lapangan yang dapat digeser ke samping">
+    <p class="border-b border-tinta px-3 py-2 text-xs font-semibold sm:hidden">Geser tabel ke samping untuk melihat kolom lainnya.</p>
+    <table class="w-full min-w-[850px] border-collapse text-left">
+      <thead class="bg-tinta font-mono text-xs uppercase text-white"><tr><th class="p-3">Lapangan</th><th class="p-3">Jenis</th><th class="p-3">Operasional</th><th class="p-3">Status</th><th class="p-3">Aksi</th></tr></thead>
+      <tbody>
+        <% daftarLapangan.forEach((lapangan, indeks) => { %>
+          <tr class="border-t-2 border-tinta <%= indeks % 2 ? 'bg-[#f3eee1]' : 'bg-kertas' %>">
+            <td class="p-3"><div class="flex items-center gap-3"><% if (lapangan.gambar) { %><img src="<%= urlGambar(lapangan.gambar) %>" alt="" class="h-14 w-20 border-2 border-tinta object-cover"><% } else { %><span class="flex h-14 w-20 items-center justify-center border-2 border-tinta bg-lime font-mono text-[9px] font-bold">TANPA FOTO</span><% } %><span class="font-bold"><%= lapangan.nama %></span></div></td>
+            <td class="p-3"><%= lapangan.jenis_nama %></td>
+            <td class="p-3 font-mono text-xs">BUKA <%= String(lapangan.jam_buka).slice(0, 5) %><br>TUTUP <%= String(lapangan.jam_tutup).slice(0, 5) %><br>LAMPU <%= String(lapangan.jam_mulai_lampu).slice(0, 5) %></td>
+            <td class="p-3"><span class="border-2 border-tinta px-2 py-1 font-mono text-[10px] font-bold uppercase <%= lapangan.status === 'aktif' ? 'bg-lime' : 'bg-neutral-200' %>"><%= lapangan.status %></span></td>
+            <td class="p-3"><div class="flex gap-2"><a href="/admin/lapangan/<%= lapangan.id %>/edit" class="border-2 border-tinta px-3 py-2 text-sm font-bold hover:bg-lime">Ubah</a><form action="/admin/lapangan/<%= lapangan.id %>/hapus" method="post" onsubmit="return confirm('Hapus lapangan ini?');"><button class="border-2 border-tinta bg-white px-3 py-2 text-sm font-bold hover:bg-oranye">Hapus</button></form></div></td>
+          </tr>
+        <% }) %>
+        <% if (!daftarLapangan.length) { %><tr><td colspan="5" class="p-5">Belum ada lapangan.</td></tr><% } %>
+      </tbody>
+    </table>
+  </section>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

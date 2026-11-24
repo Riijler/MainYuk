@@ -1,0 +1,29 @@
+<%- include('../partials/header', { judul }) %>
+<%- include('../partials/navbar') %>
+<main id="konten" class="mx-auto w-full max-w-7xl flex-1 px-6 py-10">
+  <p class="font-mono text-xs font-bold uppercase tracking-widest">AKUN / BOOKING SAYA</p>
+  <div class="mt-2 flex flex-wrap items-end justify-between gap-4"><div><h1 class="text-4xl font-black uppercase sm:text-5xl">Riwayat booking</h1><p class="mt-3 text-neutral-700">Lihat status, cetak bukti, atau batalkan booking yang menunggu pembayaran.</p></div><a href="/booking/baru" class="tombol-utama">Booking baru <span aria-hidden="true" class="ml-2">+</span></a></div>
+  <% if (pesan) { %><p role="status" class="mt-6 border-2 border-tinta bg-lime p-3 font-semibold"><%= pesan %></p><% } %>
+  <section class="mt-8 overflow-x-auto border-2 border-tinta bg-kertas" role="region" tabindex="0" aria-label="Riwayat booking yang dapat digeser ke samping">
+    <p class="border-b border-tinta px-3 py-2 text-xs font-semibold sm:hidden">Geser tabel ke samping untuk melihat kolom lainnya.</p>
+    <table class="w-full min-w-[900px] border-collapse text-left">
+      <thead class="bg-tinta font-mono text-xs uppercase text-white"><tr><th class="p-3">Kode / lapangan</th><th class="p-3">Tanggal & waktu</th><th class="p-3">Durasi</th><th class="p-3">Total</th><th class="p-3">Status</th><th class="p-3">Aksi</th></tr></thead>
+      <tbody>
+        <% daftarBooking.forEach((booking, indeks) => { %>
+          <tr class="border-t-2 border-tinta <%= indeks % 2 ? 'bg-[#f3eee1]' : 'bg-kertas' %>">
+            <td class="p-3"><p class="font-mono text-xs font-bold"><%= booking.kode_booking %></p><p class="mt-1 font-bold"><%= booking.lapangan_nama %></p><p class="font-mono text-[10px] uppercase"><%= booking.jenis_nama %></p></td>
+            <td class="p-3"><p class="font-bold"><%= new Date(`${booking.tanggal}T00:00:00Z`).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }) %></p><p class="font-mono text-xs"><%= String(booking.jam_mulai).slice(0, 5) %>—<%= String(booking.jam_selesai).slice(0, 5) %></p></td>
+            <td class="p-3"><%= booking.durasi_jam %> jam</td><td class="p-3 font-bold">Rp<%= new Intl.NumberFormat('id-ID').format(Number(booking.total_biaya)) %></td>
+            <td class="p-3"><span class="border-2 border-tinta px-2 py-1 font-mono text-[9px] font-bold uppercase <%= booking.status === 'menunggu_pembayaran' ? 'bg-kuning' : (booking.status === 'dibatalkan' ? 'bg-oranye' : 'bg-lime') %>"><%= booking.status.replaceAll('_', ' ') %></span></td>
+            <td class="p-3"><div class="flex gap-2"><a href="/booking/<%= booking.id %>/bukti" class="border-2 border-tinta px-3 py-2 text-sm font-bold hover:bg-lime">Bukti</a><% if (booking.status === 'menunggu_pembayaran') { %><form action="/booking/<%= booking.id %>/batal" method="post" onsubmit="return confirm('Batalkan booking ini?');"><button class="border-2 border-tinta bg-white px-3 py-2 text-sm font-bold hover:bg-oranye">Batal</button></form><% } %></div></td>
+          </tr>
+        <% }) %>
+        <% if (!daftarBooking.length) { %><tr><td colspan="6" class="p-7 text-center"><p class="font-bold">Belum ada booking.</p><a href="/booking/baru" class="mt-3 inline-block underline">Buat booking pertama</a></td></tr><% } %>
+      </tbody>
+    </table>
+  </section>
+  <% if (jumlahHalaman > 1) { %><nav class="mt-6 flex justify-end gap-2" aria-label="Halaman riwayat"><% if (halaman > 1) { %><a href="/riwayat?halaman=<%= halaman - 1 %>" class="border-2 border-tinta bg-kertas px-4 py-2 font-bold">Sebelumnya</a><% } %><span class="border-2 border-tinta bg-lime px-4 py-2 font-mono text-sm font-bold"><%= halaman %> / <%= jumlahHalaman %></span><% if (halaman < jumlahHalaman) { %><a href="/riwayat?halaman=<%= halaman + 1 %>" class="border-2 border-tinta bg-kertas px-4 py-2 font-bold">Berikutnya</a><% } %></nav><% } %>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<nav class="mb-8 flex flex-wrap gap-2" aria-label="Menu administrasi">
+  <% const menuAdmin = [
+    { label: 'Jenis', href: '/admin/jenis' },
+    { label: 'Lapangan', href: '/admin/lapangan' },
+    { label: 'Tarif', href: '/admin/tarif' },
+    { label: 'Pengguna', href: '/admin/user' },
+    { label: 'Rekap', href: '/admin/rekap' },
+    { label: 'Audit', href: '/admin/audit' }
+  ]; %>
+  <% menuAdmin.forEach((menu) => { %>
+    <a href="<%= menu.href %>" class="inline-flex min-h-11 flex-1 items-center justify-center border-2 border-tinta px-3 py-2 text-center font-mono text-xs font-bold uppercase sm:flex-none sm:px-4 <%= menu.href === urlHalaman ? 'bg-lime shadow-keras' : 'bg-kertas hover:bg-white' %>"><%= menu.label %></a>
+  <% }) %>
+</nav>

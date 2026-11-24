@@ -1,0 +1,46 @@
+<%- include('../partials/header', { judul }) %>
+<%- include('../partials/navbar') %>
+<main id="konten" class="mx-auto w-full max-w-7xl flex-1 px-6 py-10">
+  <p class="font-mono text-xs font-bold uppercase tracking-widest">ADMIN / HARGA SEWA</p>
+  <h1 class="mt-2 text-4xl font-black uppercase sm:text-5xl">Tarif lapangan</h1>
+  <p class="mt-3 text-neutral-700">Atur tarif weekday dan weekend, dengan atau tanpa lampu.</p>
+  <%- include('nav', { urlHalaman: '/admin/tarif' }) %>
+  <% if (pesan) { %><p role="status" class="mb-5 border-2 border-tinta bg-lime p-3 font-semibold"><%= pesan %></p><% } %>
+
+  <section class="mb-8 border-2 border-tinta bg-kertas p-5 shadow-keras sm:p-6" aria-labelledby="judul-tambah-tarif">
+    <h2 id="judul-tambah-tarif" class="text-xl font-black uppercase">Tambah kombinasi tarif</h2>
+    <form action="/admin/tarif" method="post" class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div><label for="lapangan_id" class="label-form">Lapangan</label><select id="lapangan_id" name="lapangan_id" class="input-form" required><option value="">Pilih lapangan</option><% daftarLapangan.forEach((lapangan) => { %><option value="<%= lapangan.id %>"><%= lapangan.nama %></option><% }) %></select></div>
+      <div><label for="tipe_hari" class="label-form">Tipe hari</label><select id="tipe_hari" name="tipe_hari" class="input-form"><option value="weekday">Weekday (Senin–Jumat)</option><option value="weekend">Weekend (Sabtu–Minggu)</option></select></div>
+      <div><label for="pakai_lampu" class="label-form">Penerangan</label><select id="pakai_lampu" name="pakai_lampu" class="input-form"><option value="0">Tanpa lampu</option><option value="1">Pakai lampu</option></select></div>
+      <div><label for="harga_per_jam" class="label-form">Harga per jam (Rp)</label><input id="harga_per_jam" name="harga_per_jam" type="number" class="input-form" min="1" max="9999999999" step="1" required></div>
+      <div class="md:col-span-2 xl:col-span-4"><button class="tombol-utama">Tambah tarif</button></div>
+    </form>
+  </section>
+
+  <section class="overflow-x-auto border-2 border-tinta bg-kertas" role="region" tabindex="0" aria-label="Daftar tarif yang dapat digeser ke samping">
+    <p class="border-b border-tinta px-3 py-2 text-xs font-semibold sm:hidden">Geser tabel ke samping untuk melihat kolom lainnya.</p>
+    <table class="w-full min-w-[850px] border-collapse text-left">
+      <thead class="bg-tinta font-mono text-xs uppercase text-white"><tr><th class="p-3">Lapangan</th><th class="p-3">Hari</th><th class="p-3">Lampu</th><th class="p-3">Tarif / jam</th><th class="p-3">Aksi</th></tr></thead>
+      <tbody>
+        <% daftarTarif.forEach((tarif, indeks) => { %>
+          <tr class="border-t-2 border-tinta <%= indeks % 2 ? 'bg-[#f3eee1]' : 'bg-kertas' %>">
+            <td colspan="4" class="p-3">
+              <form id="edit-tarif-<%= tarif.id %>" action="/admin/tarif/<%= tarif.id %>/edit" method="post" class="grid gap-3 sm:grid-cols-4">
+                <div><label class="sr-only" for="lp-<%= tarif.id %>">Lapangan</label><select id="lp-<%= tarif.id %>" name="lapangan_id" class="input-form"><% daftarLapangan.forEach((lapangan) => { %><option value="<%= lapangan.id %>" <%= tarif.lapangan_id === lapangan.id ? 'selected' : '' %>><%= lapangan.nama %></option><% }) %></select></div>
+                <div><label class="sr-only" for="hari-<%= tarif.id %>">Tipe hari</label><select id="hari-<%= tarif.id %>" name="tipe_hari" class="input-form"><option value="weekday" <%= tarif.tipe_hari === 'weekday' ? 'selected' : '' %>>Weekday</option><option value="weekend" <%= tarif.tipe_hari === 'weekend' ? 'selected' : '' %>>Weekend</option></select></div>
+                <div><label class="sr-only" for="lampu-<%= tarif.id %>">Penerangan</label><select id="lampu-<%= tarif.id %>" name="pakai_lampu" class="input-form"><option value="0" <%= !tarif.pakai_lampu ? 'selected' : '' %>>Tanpa lampu</option><option value="1" <%= tarif.pakai_lampu ? 'selected' : '' %>>Pakai lampu</option></select></div>
+                <div><label class="sr-only" for="harga-<%= tarif.id %>">Harga per jam</label><input id="harga-<%= tarif.id %>" name="harga_per_jam" type="number" min="1" max="9999999999" step="1" class="input-form" value="<%= Number(tarif.harga_per_jam) %>" required></div>
+              </form>
+            </td>
+            <td class="p-3"><div class="flex gap-2"><button type="submit" form="edit-tarif-<%= tarif.id %>" class="border-2 border-tinta px-3 py-2 font-bold hover:bg-lime">Simpan</button><form id="hapus-tarif-<%= tarif.id %>" action="/admin/tarif/<%= tarif.id %>/hapus" method="post" onsubmit="return confirm('Hapus tarif ini?');"><button class="border-2 border-tinta bg-white px-3 py-2 font-bold hover:bg-oranye">Hapus</button></form></div></td>
+          </tr>
+        <% }) %>
+        <% if (!daftarTarif.length) { %><tr><td colspan="5" class="p-5">Belum ada tarif.</td></tr><% } %>
+      </tbody>
+    </table>
+  </section>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

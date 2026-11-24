@@ -1,0 +1,49 @@
+<%- include('../partials/header', { judul }) %>
+<%- include('../partials/navbar') %>
+<main id="konten" class="mx-auto w-full max-w-7xl flex-1 px-6 py-10">
+  <p class="font-mono text-xs font-bold uppercase tracking-widest">JADWAL / MINGGUAN</p>
+  <div class="mt-2 flex flex-wrap items-end justify-between gap-4">
+    <div><h1 class="text-4xl font-black uppercase sm:text-5xl">Jadwal 7 hari</h1><p class="mt-3 text-neutral-700">Satu lapangan, tujuh hari, semua slot per jam.</p></div>
+    <a href="/jadwal" class="inline-flex min-h-11 items-center font-bold underline">Jadwal harian ↗</a>
+  </div>
+  <% if (pesanTanggal) { %><p role="alert" class="mt-6 border-2 border-tinta bg-kuning p-3 font-semibold"><%= pesanTanggal %></p><% } %>
+
+  <form action="/jadwal/mingguan" method="get" class="mt-8 grid gap-4 border-2 border-tinta bg-kertas p-5 shadow-keras sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+    <div><label for="lapangan" class="label-form">Lapangan</label><select id="lapangan" name="lapangan" class="input-form" required><% daftarLapanganFilter.forEach((pilihan) => { %><option value="<%= pilihan.id %>" <%= lapangan && pilihan.id === lapangan.id ? 'selected' : '' %>><%= pilihan.nama %></option><% }) %></select></div>
+    <div><label for="tanggal" class="label-form">Mulai tanggal</label><input id="tanggal" name="tanggal" type="date" class="input-form" value="<%= tanggalMulai %>" required></div>
+    <button class="tombol-utama">Tampilkan minggu</button>
+  </form>
+
+  <% if (lapangan) { %>
+    <section class="mt-7 flex flex-wrap items-end justify-between gap-4 border-b-2 border-tinta pb-5">
+      <div><p class="font-mono text-xs font-bold uppercase tracking-widest"><%= lapangan.jenis_nama %> / JAM <%= String(lapangan.jam_buka).slice(0,5) %>—<%= String(lapangan.jam_tutup).slice(0,5) %></p><h2 class="mt-1 text-2xl font-black uppercase"><%= lapangan.nama %></h2><p class="mt-1 font-mono text-xs font-bold uppercase">Lampu mulai <%= String(lapangan.jam_mulai_lampu).slice(0,5) %></p></div>
+      <a href="<%= pengguna.role === 'penyewa' ? '/booking/baru' : '/petugas/booking/baru' %>" class="tombol-utama">Buat booking <span aria-hidden="true" class="ml-2">+</span></a>
+    </section>
+    <div class="mt-5 flex flex-wrap gap-2"><% tarif.forEach((item) => { %><span class="border-2 border-tinta px-3 py-2 font-mono text-[10px] font-bold uppercase <%= item.pakaiLampu ? 'bg-kuning' : 'bg-kertas' %>"><%= item.hari %> / <%= item.lampu %> / Rp<%= item.harga %></span><% }) %></div>
+
+    <section class="mt-6 overflow-x-auto border-2 border-tinta bg-kertas shadow-keras" role="region" tabindex="0" aria-label="Slot jadwal tujuh hari, geser tabel ke samping">
+      <p class="border-b border-tinta px-3 py-2 text-xs font-semibold sm:hidden">Geser tabel ke samping untuk melihat semua hari.</p>
+      <table class="w-full min-w-[1080px] border-collapse text-center">
+        <thead class="bg-tinta text-white"><tr><th class="sticky left-0 z-10 border-r-2 border-white bg-tinta p-3 font-mono text-xs uppercase">Waktu</th><% daftarHari.forEach((hari) => { %><th class="border-l border-neutral-600 p-3"><span class="block font-mono text-[10px] font-bold uppercase"><%= hari.label %></span><span class="mt-1 block text-xs"><%= hari.tanggal %></span></th><% }) %></tr></thead>
+        <tbody>
+          <% if (daftarHari.length && daftarHari[0].slot.length) { %>
+            <% daftarHari[0].slot.forEach((slotContoh, indeksSlot) => { %>
+              <tr class="border-t-2 border-tinta">
+                <th class="sticky left-0 border-r-2 border-tinta bg-[#f3eee1] p-3 font-mono text-xs font-bold"><%= slotContoh.jamMulai %>—<%= slotContoh.jamSelesai %><% if (slotContoh.pakaiLampu) { %><span class="mt-1 block bg-kuning px-1 text-[8px] uppercase">Lampu</span><% } %></th>
+                <% daftarHari.forEach((hari) => { const slot = hari.slot[indeksSlot]; %>
+                  <td class="border-l-2 border-tinta p-1"><span class="flex min-h-12 items-center justify-center border border-tinta font-mono text-[9px] font-bold uppercase <%= slot.terisi ? 'bg-[repeating-linear-gradient(135deg,#d4d4d4_0px,#d4d4d4_5px,#f5f5f5_5px,#f5f5f5_10px)]' : (slot.pakaiLampu ? 'bg-kuning' : 'bg-white') %>"><%= slot.terisi ? 'Terisi' : 'Kosong' %></span></td>
+                <% }) %>
+              </tr>
+            <% }) %>
+          <% } else { %><tr><td colspan="8" class="p-7">Jam operasional belum memiliki slot satu jam penuh.</td></tr><% } %>
+        </tbody>
+      </table>
+    </section>
+    <p class="mt-3 font-mono text-[10px] font-bold uppercase">Slot kuning menandakan waktu lampu. Arsiran menandakan booking aktif.</p>
+  <% } else { %>
+    <div class="mt-8 border-2 border-tinta bg-kertas p-7 shadow-keras"><h2 class="text-2xl font-black uppercase">Belum ada lapangan aktif</h2><p class="mt-2">Jadwal mingguan akan tampil setelah admin menambahkan lapangan.</p></div>
+  <% } %>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

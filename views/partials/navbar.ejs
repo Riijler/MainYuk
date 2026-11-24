@@ -1,0 +1,40 @@
+<a href="#konten" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-lime focus:p-3">Lewati ke konten</a>
+<header class="site-navbar bg-tinta text-kertas">
+  <nav class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-5 gap-y-3 px-4 py-3 sm:px-6 sm:py-4" aria-label="Navigasi utama">
+    <a href="/" class="text-xl font-black uppercase tracking-tight">MainYuk<span class="text-lime">.</span></a>
+    <button id="tombol-menu" type="button" class="inline-flex min-h-11 items-center gap-2 border-2 border-kertas px-3 font-mono text-xs font-bold uppercase text-kertas hover:bg-lime hover:text-tinta md:hidden" aria-controls="menu-utama" aria-expanded="false">
+      <span id="label-menu">Menu</span><span aria-hidden="true">☰</span>
+    </button>
+
+    <div id="menu-utama" class="hidden w-full flex-wrap items-center justify-end gap-2 border-t border-neutral-700 pt-3 md:flex md:w-auto md:border-0 md:pt-0">
+      <% if (pengguna) { %>
+        <span class="w-full px-1 font-mono text-[10px] font-bold uppercase text-lime sm:w-auto sm:text-xs"><%= pengguna.nama %> / <%= pengguna.role %></span>
+        <% if (pengguna.role === 'admin') { %>
+          <a href="/admin/jenis" class="tautan-menu">Kelola</a>
+        <% } else { %>
+          <a href="/jadwal" class="tautan-menu">Jadwal</a>
+          <% if (pengguna.role === 'penyewa') { %>
+            <a href="/booking/baru" class="tautan-menu">Booking</a><a href="/riwayat" class="tautan-menu">Riwayat</a>
+          <% } %>
+          <% if (pengguna.role === 'petugas') { %>
+            <a href="/petugas/booking" class="tautan-menu">Booking</a><a href="/petugas/penyewa/baru" class="tautan-menu">Penyewa +</a>
+          <% } %>
+        <% } %>
+        <a href="<%= alamatDashboard %>" class="tautan-menu">Dashboard</a>
+        <form action="/logout" method="post" class="flex-1 md:flex-none"><button type="submit" class="tautan-menu w-full bg-lime text-tinta hover:bg-kuning md:w-auto">Keluar</button></form>
+      <% } else if (typeof halamanAuth !== 'undefined' && halamanAuth) { %>
+        <a href="/" class="tautan-menu">Kembali ke beranda</a>
+        <% if (halamanAuth === 'login') { %>
+          <a href="/daftar" class="tautan-menu bg-lime text-tinta hover:bg-kuning">Buat akun</a>
+        <% } else { %>
+          <a href="/login" class="tautan-menu bg-lime text-tinta hover:bg-kuning">Masuk</a>
+        <% } %>
+      <% } else { %>
+        <a href="#pilihan-lapangan" class="tautan-menu border-transparent hover:border-kertas hover:text-lime">Lapangan</a>
+        <a href="#cara-sewa" class="tautan-menu border-transparent hover:border-kertas hover:text-lime">Cara sewa</a>
+        <a href="/login" class="tautan-menu border-transparent hover:border-kertas hover:text-lime">Masuk</a>
+        <a href="/daftar" class="tautan-menu bg-lime text-tinta hover:bg-kuning">Daftar <span aria-hidden="true" class="ml-1">↗</span></a>
+      <% } %>
+    </div>
+  </nav>
+</header>

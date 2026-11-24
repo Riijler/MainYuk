@@ -1,0 +1,41 @@
+<%- include('../partials/header', { judul }) %>
+<%- include('../partials/navbar') %>
+<main id="konten" class="mx-auto w-full max-w-7xl flex-1 px-6 py-10">
+  <p class="font-mono text-xs font-bold uppercase tracking-widest">ADMIN / DATA DASAR</p>
+  <h1 class="mt-2 text-4xl font-black uppercase sm:text-5xl">Jenis lapangan</h1>
+  <p class="mt-3 max-w-2xl text-neutral-700">Tambah dan rapikan jenis olahraga yang tersedia untuk penyewa.</p>
+  <%- include('nav', { urlHalaman: '/admin/jenis' }) %>
+
+  <% if (pesan) { %><p role="status" class="mb-5 border-2 border-tinta bg-lime p-3 font-semibold"><%= pesan %></p><% } %>
+
+  <section class="mb-8 max-w-xl border-2 border-tinta bg-kertas p-5 shadow-keras" aria-labelledby="judul-tambah">
+    <h2 id="judul-tambah" class="text-xl font-black uppercase">Tambah jenis</h2>
+    <form action="/admin/jenis" method="post" class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
+      <div class="flex-1"><label for="nama-baru" class="label-form">Nama jenis</label><input id="nama-baru" name="nama" class="input-form" maxlength="50" required></div>
+      <button class="tombol-utama">Tambah</button>
+    </form>
+  </section>
+
+  <section class="overflow-hidden border-2 border-tinta bg-kertas" aria-labelledby="judul-daftar">
+    <h2 id="judul-daftar" class="border-b-2 border-tinta bg-tinta px-5 py-3 font-mono text-sm font-bold uppercase text-white">Daftar jenis / <%= daftarJenis.length %></h2>
+    <% if (daftarJenis.length) { %>
+      <div class="divide-y-2 divide-tinta">
+        <% daftarJenis.forEach((jenis) => { %>
+          <div class="grid gap-3 p-4 md:grid-cols-[1fr_auto] md:items-center">
+            <form action="/admin/jenis/<%= jenis.id %>/edit" method="post" class="flex flex-col gap-3 sm:flex-row">
+              <label class="sr-only" for="jenis-<%= jenis.id %>">Nama jenis lapangan</label>
+              <input id="jenis-<%= jenis.id %>" name="nama" class="input-form" value="<%= jenis.nama %>" maxlength="50" required>
+              <button class="min-h-11 border-2 border-tinta bg-kertas px-4 font-bold hover:bg-lime">Simpan</button>
+            </form>
+            <form action="/admin/jenis/<%= jenis.id %>/hapus" method="post" onsubmit="return confirm('Hapus jenis ini? Jenis yang dipakai lapangan tidak dapat dihapus.');">
+              <button class="min-h-11 border-2 border-tinta bg-white px-4 font-bold hover:bg-oranye">Hapus</button>
+            </form>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %><p class="p-5">Belum ada jenis lapangan.</p><% } %>
+  </section>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

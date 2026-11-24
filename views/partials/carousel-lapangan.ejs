@@ -1,0 +1,43 @@
+<%
+  const namaJenis = String(jenis || '').toLowerCase();
+  let fotoContoh = '';
+  if (/padel/.test(namaJenis)) fotoContoh = '/images/lapangan-contoh/padel.jpg';
+  else if (/badminton|bulu\s*tangkis/.test(namaJenis)) fotoContoh = '/images/lapangan-contoh/badminton.jpg';
+  else if (/tenis|tennis/.test(namaJenis)) fotoContoh = '/images/lapangan-contoh/tenis.jpg';
+  else if (/voli|volleyball/.test(namaJenis)) fotoContoh = '/images/lapangan-contoh/voli.jpg';
+  else if (/futsal/.test(namaJenis)) fotoContoh = '/images/lapangan-contoh/futsal.jpg';
+  else if (/mini\s*soccer|sepak\s*bola|football|soccer/.test(namaJenis)) fotoContoh = '/images/lapangan-contoh/football.jpg';
+  else if (/basket|basketball/.test(namaJenis)) fotoContoh = '/images/lapangan-contoh/basket.jpg';
+  const totalSlide = 1 + (fotoContoh ? 1 : 0) + (lapangan.gambar ? 1 : 0);
+%>
+<div class="carousel-lapangan" data-carousel-lapangan role="region" aria-roledescription="carousel" aria-label="Foto dan ilustrasi <%= jenis %>">
+  <div class="carousel-lapangan__slides">
+    <% let nomorSlide = 0; %>
+    <% nomorSlide += 1; %>
+    <div class="carousel-lapangan__slide" data-carousel-slide role="group" aria-roledescription="slide" aria-label="<%= nomorSlide %> dari <%= totalSlide %>">
+      <div class="carousel-lapangan__illustration"><%- include('ilustrasi-lapangan', { jenis, kelas: 'w-full max-w-sm' }) %></div>
+    </div>
+    <% if (fotoContoh) { nomorSlide += 1; %>
+      <div class="carousel-lapangan__slide" data-carousel-slide role="group" aria-roledescription="slide" aria-label="<%= nomorSlide %> dari <%= totalSlide %>" hidden>
+        <img src="<%= fotoContoh %>" alt="Contoh foto lapangan <%= jenis %>" class="carousel-lapangan__image" loading="lazy" data-source="stand-in" data-subject="<%= jenis %> court">
+      </div>
+    <% } %>
+    <% if (lapangan.gambar) { nomorSlide += 1; %>
+      <div class="carousel-lapangan__slide" data-carousel-slide role="group" aria-roledescription="slide" aria-label="<%= nomorSlide %> dari <%= totalSlide %>" hidden>
+        <img src="<%= urlGambar(lapangan.gambar) %>" alt="Foto lapangan <%= lapangan.nama %>" class="carousel-lapangan__image" loading="lazy">
+      </div>
+    <% } %>
+  </div>
+  <% if (totalSlide > 1) { %>
+    <div class="carousel-lapangan__controls">
+      <button type="button" class="carousel-lapangan__arrow" data-carousel-prev aria-label="Foto sebelumnya">←</button>
+      <div class="carousel-lapangan__dots" aria-label="Pilih foto">
+        <% for (let indeks = 0; indeks < totalSlide; indeks += 1) { %>
+          <% const aktif = indeks === 0; %>
+          <button type="button" class="carousel-lapangan__dot <%= aktif ? 'is-active' : '' %>" data-carousel-dot="<%= indeks %>" aria-label="Tampilkan foto <%= indeks + 1 %>" <% if (aktif) { %>aria-current="true"<% } %>></button>
+        <% } %>
+      </div>
+      <button type="button" class="carousel-lapangan__arrow" data-carousel-next aria-label="Foto berikutnya">→</button>
+    </div>
+  <% } %>
+</div>

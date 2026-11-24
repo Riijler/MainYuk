@@ -1,0 +1,57 @@
+<%- include('../partials/header', { judul }) %>
+<%- include('../partials/navbar', { halamanAuth }) %>
+
+<main id="konten" class="mx-auto grid w-full max-w-7xl flex-1 px-6 py-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:py-14">
+  <section class="relative hidden min-h-[620px] flex-col justify-between overflow-hidden border-2 border-tinta bg-tinta p-10 text-kertas lg:flex" aria-label="Tentang MainYuk">
+    <div class="absolute -right-16 -top-16 h-72 w-72 rounded-full border-[32px] border-lime/20"></div>
+    <div class="relative">
+      <p class="font-mono text-xs font-bold uppercase tracking-[0.2em] text-lime">MAINYUK / MASUK</p>
+      <h1 class="mt-8 text-5xl font-black uppercase leading-[0.95]">Waktu main<br>makin dekat.</h1>
+      <p class="mt-5 max-w-sm text-kertas/75">Masuk untuk melihat booking, jadwal, dan bukti sewa lapanganmu.</p>
+    </div>
+    <div class="relative border-2 border-lime p-5">
+      <svg viewBox="0 0 420 230" class="w-full" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="4" y="4" width="412" height="222" stroke="#c6f26b" stroke-width="3" />
+        <path d="M210 4V226M4 115H48V61H4M4 169H48V115M416 115H372V61H416M416 169H372V115" stroke="#c6f26b" stroke-width="3" />
+        <circle cx="210" cy="115" r="43" stroke="#c6f26b" stroke-width="3" />
+        <circle cx="210" cy="115" r="4" fill="#c6f26b" />
+        <path d="M48 4V49H96V181H48V226M372 4V49H324V181H372V226" stroke="#c6f26b" stroke-width="3" />
+      </svg>
+      <div class="mt-4 flex justify-between font-mono text-[10px] font-bold uppercase text-lime"><span>PILIH JADWAL</span><span>08.00—22.00</span></div>
+    </div>
+    <p class="relative font-mono text-xs uppercase text-kertas/60">Lapangan siap. Tim siap?</p>
+  </section>
+
+  <section class="mx-auto w-full max-w-xl lg:px-14" aria-labelledby="judul-login">
+    <div class="mb-8">
+      <p class="mb-3 font-mono text-xs font-bold uppercase tracking-[0.2em]">AKUN MAINYUK</p>
+      <h2 id="judul-login" class="text-4xl font-black uppercase sm:text-5xl">Masuk akun</h2>
+      <p class="mt-3 text-neutral-700">Masukkan username dan password untuk melanjutkan.</p>
+    </div>
+
+    <% if (pesanBerhasil) { %>
+      <div role="status" class="mb-5 border-2 border-tinta bg-lime p-4 font-semibold"><%= pesanBerhasil %></div>
+    <% } %>
+    <% if (pesanError) { %>
+      <div role="alert" class="mb-5 border-2 border-tinta bg-oranye p-4 font-semibold"><%= pesanError %></div>
+    <% } %>
+
+    <form action="/login" method="post" class="kartu-kertas space-y-5 p-6 sm:p-8">
+      <div>
+        <label for="username" class="label-form">Username</label>
+        <input id="username" name="username" type="text" class="input-form" value="<%= nilai.username || '' %>" autocomplete="username" minlength="3" maxlength="50" required>
+      </div>
+      <div>
+        <label for="password" class="label-form">Password</label>
+        <input id="password" name="password" type="password" class="input-form" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="tombol-utama w-full">Masuk ke akun <span aria-hidden="true" class="ml-2">→</span></button>
+      <p class="text-center text-sm">Belum punya akun? <a class="font-bold underline decoration-2 underline-offset-4" href="/daftar">Daftar sebagai penyewa</a></p>
+    </form>
+    <p class="mt-5 text-center font-mono text-[10px] font-bold uppercase tracking-wide text-neutral-600">Akun petugas dan admin dibuat oleh administrator.</p>
+  </section>
+</main>
+
+<%- include('../partials/footer') %>
+</body>
+</html>

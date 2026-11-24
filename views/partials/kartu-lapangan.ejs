@@ -1,0 +1,19 @@
+<article class="group flex h-full flex-col border-2 border-tinta bg-kertas shadow-keras transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[7px_7px_0_#111]">
+  <div class="relative overflow-hidden border-b-2 border-tinta bg-lime p-5" aria-hidden="true">
+    <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(to right, #111 1px, transparent 1px), linear-gradient(to bottom, #111 1px, transparent 1px); background-size: 22px 22px"></div>
+    <%- include('ilustrasi-lapangan', { jenis: lapangan.jenis, kelas: 'relative mx-auto h-32 w-full max-w-sm' }) %>
+    <span class="absolute left-5 top-5 border-2 border-tinta bg-kertas px-2 py-1 font-mono text-[10px] font-bold uppercase"><%= lapangan.label %></span>
+    <span class="absolute bottom-5 right-5 flex items-center gap-1.5 border-2 border-tinta bg-kertas px-2 py-1 font-mono text-[10px] font-bold uppercase"><i class="h-2.5 w-2.5 rounded-full bg-lime ring-1 ring-tinta"></i>Aktif</span>
+  </div>
+  <div class="flex flex-1 flex-col p-5">
+    <p class="font-mono text-xs font-bold uppercase tracking-widest text-neutral-600"><%= lapangan.jenis %></p>
+    <h3 class="mt-1 text-2xl font-black uppercase"><%= lapangan.nama %></h3>
+    <div class="mt-5 grid grid-cols-2 border-y-2 border-tinta py-3">
+      <div><p class="font-mono text-[10px] font-bold uppercase text-neutral-600">JAM BUKA</p><p class="mt-1 font-bold"><%= lapangan.jam %></p></div>
+      <div class="border-l-2 border-tinta pl-4"><p class="font-mono text-[10px] font-bold uppercase text-neutral-600">TARIF MULAI</p><p class="mt-1 font-bold">Rp<%= lapangan.harga %><span class="font-normal">/jam</span></p></div>
+    </div>
+    <a href="/login" class="mt-5 inline-flex min-h-11 items-center justify-between border-2 border-tinta px-4 font-bold transition-colors group-hover:bg-lime">
+      Lihat jadwal <span aria-hidden="true" class="text-xl">↗</span>
+    </a>
+  </div>
+</article>

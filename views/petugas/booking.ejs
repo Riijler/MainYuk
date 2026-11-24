@@ -1,0 +1,44 @@
+<%- include('../partials/header', { judul }) %>
+<%- include('../partials/navbar') %>
+<main id="konten" class="mx-auto w-full max-w-7xl flex-1 px-6 py-10">
+  <p class="font-mono text-xs font-bold uppercase tracking-widest">PETUGAS / TRANSAKSI</p>
+  <div class="mt-2 flex flex-wrap items-end justify-between gap-4"><div><h1 class="text-4xl font-black uppercase sm:text-5xl">Daftar booking</h1><p class="mt-3 text-neutral-700">Konfirmasi pembayaran, batalkan, atau tandai booking selesai.</p></div><div class="flex flex-wrap gap-3"><a href="/petugas/penyewa/baru" class="inline-flex min-h-11 items-center border-2 border-tinta bg-kertas px-4 font-bold shadow-keras hover:bg-lime">Tambah penyewa</a><a href="/petugas/booking/baru" class="tombol-utama">Booking atas nama penyewa <span aria-hidden="true" class="ml-2">+</span></a></div></div>
+  <% if (pesan) { %><p role="status" class="mt-6 border-2 border-tinta bg-lime p-3 font-semibold"><%= pesan %></p><% } %>
+  <form action="/petugas/booking" method="get" class="mt-7 grid gap-3 border-2 border-tinta bg-kertas p-4 sm:grid-cols-[1fr_220px_150px_auto] sm:items-end">
+    <div><label for="cari" class="label-form">Cari kode, penyewa, lapangan, status</label><input id="cari" name="cari" class="input-form" value="<%= cari %>" maxlength="100"></div>
+    <div><label for="urut" class="label-form">Urutkan</label><select id="urut" name="urut" class="input-form"><% const opsiUrut = [['dibuat','Terbaru'],['tanggal','Tanggal'],['kode','Kode booking'],['penyewa','Nama penyewa'],['lapangan','Lapangan'],['status','Status'],['total','Total biaya']]; opsiUrut.forEach(([nilai, label]) => { %><option value="<%= nilai %>" <%= urut === nilai ? 'selected' : '' %>><%= label %></option><% }) %></select></div>
+    <div><label for="arah" class="label-form">Arah</label><select id="arah" name="arah" class="input-form"><option value="desc" <%= arah === 'desc' ? 'selected' : '' %>>Turun</option><option value="asc" <%= arah === 'asc' ? 'selected' : '' %>>Naik</option></select></div>
+    <button class="tombol-utama">Terapkan</button>
+  </form>
+  <section class="mt-8 overflow-x-auto border-2 border-tinta bg-kertas" role="region" tabindex="0" aria-label="Daftar booking yang dapat digeser ke samping">
+    <p class="border-b border-tinta px-3 py-2 text-xs font-semibold sm:hidden">Geser tabel ke samping untuk melihat kolom lainnya.</p>
+    <table class="w-full min-w-[1000px] border-collapse text-left">
+      <thead class="bg-tinta font-mono text-xs uppercase text-white"><tr><th class="p-3">Booking</th><th class="p-3">Penyewa</th><th class="p-3">Jadwal</th><th class="p-3">Total</th><th class="p-3">Status</th><th class="p-3">Aksi</th></tr></thead>
+      <tbody>
+        <% daftarBooking.forEach((booking, indeks) => { %>
+          <tr class="border-t-2 border-tinta align-top <%= indeks % 2 ? 'bg-[#f3eee1]' : 'bg-kertas' %>">
+            <td class="p-3"><p class="font-mono text-xs font-bold"><%= booking.kode_booking %></p><p class="mt-1 font-bold"><%= booking.lapangan_nama %></p><p class="font-mono text-[10px] uppercase"><%= booking.jenis_nama %></p></td>
+            <td class="p-3 font-bold"><%= booking.penyewa_nama %></td>
+            <td class="p-3"><p class="font-bold"><%= new Date(`${booking.tanggal}T00:00:00Z`).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }) %></p><p class="font-mono text-xs"><%= String(booking.jam_mulai).slice(0, 5) %>—<%= String(booking.jam_selesai).slice(0, 5) %> / <%= booking.durasi_jam %> jam</p></td>
+            <td class="p-3 font-bold">Rp<%= new Intl.NumberFormat('id-ID').format(Number(booking.total_biaya)) %></td>
+            <td class="p-3"><span class="border-2 border-tinta px-2 py-1 font-mono text-[9px] font-bold uppercase <%= booking.status === 'menunggu_pembayaran' ? 'bg-kuning' : (booking.status === 'dibatalkan' ? 'bg-oranye' : 'bg-lime') %>"><%= booking.status.replaceAll('_', ' ') %></span></td>
+            <td class="p-3"><div class="flex flex-wrap gap-2"><a href="/booking/<%= booking.id %>/bukti" class="border-2 border-tinta px-3 py-2 text-xs font-bold hover:bg-lime">Bukti</a>
+              <% if (booking.status === 'menunggu_pembayaran') { %>
+                <form action="/petugas/booking/<%= booking.id %>/status" method="post"><input type="hidden" name="status" value="dibayar"><button class="border-2 border-tinta bg-lime px-3 py-2 text-xs font-bold">Konfirmasi bayar</button></form>
+                <form action="/petugas/booking/<%= booking.id %>/status" method="post" onsubmit="return confirm('Batalkan booking ini?');"><input type="hidden" name="status" value="dibatalkan"><button class="border-2 border-tinta bg-white px-3 py-2 text-xs font-bold hover:bg-oranye">Batalkan</button></form>
+              <% } else if (booking.status === 'dibayar') { %>
+                <form action="/petugas/booking/<%= booking.id %>/status" method="post"><input type="hidden" name="status" value="selesai"><button class="border-2 border-tinta bg-lime px-3 py-2 text-xs font-bold">Tandai selesai</button></form>
+                <form action="/petugas/booking/<%= booking.id %>/status" method="post" onsubmit="return confirm('Batalkan booking yang sudah dibayar?');"><input type="hidden" name="status" value="dibatalkan"><button class="border-2 border-tinta bg-white px-3 py-2 text-xs font-bold hover:bg-oranye">Batalkan</button></form>
+              <% } %>
+            </div></td>
+          </tr>
+        <% }) %>
+        <% if (!daftarBooking.length) { %><tr><td colspan="6" class="p-7 text-center">Belum ada booking untuk ditampilkan.</td></tr><% } %>
+      </tbody>
+    </table>
+  </section>
+  <% if (jumlahHalaman > 1) { %><nav class="mt-6 flex justify-end gap-2" aria-label="Halaman booking"><% if (halaman > 1) { %><a href="/petugas/booking?halaman=<%= halaman - 1 %>&cari=<%= encodeURIComponent(cari) %>&urut=<%= urut %>&arah=<%= arah %>" class="border-2 border-tinta bg-kertas px-4 py-2 font-bold">Sebelumnya</a><% } %><span class="border-2 border-tinta bg-lime px-4 py-2 font-mono text-sm font-bold"><%= halaman %> / <%= jumlahHalaman %></span><% if (halaman < jumlahHalaman) { %><a href="/petugas/booking?halaman=<%= halaman + 1 %>&cari=<%= encodeURIComponent(cari) %>&urut=<%= urut %>&arah=<%= arah %>" class="border-2 border-tinta bg-kertas px-4 py-2 font-bold">Berikutnya</a><% } %></nav><% } %>
+</main>
+<%- include('../partials/footer') %>
+</body>
+</html>

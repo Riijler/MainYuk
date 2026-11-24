@@ -1,0 +1,21 @@
+<%- include('partials/header', { judul }) %>
+<%- include('partials/navbar') %>
+
+<main id="konten" class="mx-auto flex w-full max-w-7xl flex-1 items-center px-6 py-16">
+  <section class="kartu-kertas w-full p-7 sm:p-10">
+    <p class="font-mono text-xs font-bold uppercase tracking-widest">DASHBOARD / <%= namaRole %></p>
+    <h1 class="mt-4 text-4xl font-black uppercase sm:text-6xl">Halo, <%= pengguna.nama %>.</h1>
+    <p class="mt-4 max-w-2xl text-lg text-neutral-700">Akun berhasil masuk sebagai <strong><%= namaRole.toLowerCase() %></strong>. Pilih pekerjaan yang ingin kamu lanjutkan.</p>
+    <div class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <% let pintasan = []; %>
+      <% if (pengguna.role === 'penyewa') { pintasan = [['/jadwal','Lihat jadwal'],['/booking/baru','Buat booking'],['/riwayat','Riwayat booking']]; } %>
+      <% if (pengguna.role === 'petugas') { pintasan = [['/jadwal','Lihat jadwal'],['/petugas/booking','Daftar booking'],['/petugas/penyewa/baru','Tambah penyewa'],['/petugas/booking/baru','Booking untuk penyewa']]; } %>
+      <% if (pengguna.role === 'admin') { pintasan = [['/admin/jenis','Jenis lapangan'],['/admin/lapangan','Kelola lapangan'],['/admin/tarif','Atur tarif'],['/admin/user','Kelola pengguna'],['/admin/rekap','Rekap pendapatan'],['/admin/audit','Audit log']]; } %>
+      <% pintasan.forEach(([href, label]) => { %><a href="<%= href %>" class="flex min-h-16 items-center justify-between border-2 border-tinta bg-white px-4 font-bold shadow-keras hover:bg-lime"><%= label %><span aria-hidden="true">↗</span></a><% }) %>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>
+</body>
+</html>

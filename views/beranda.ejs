@@ -1,0 +1,122 @@
+<%- include('partials/header', { judul }) %>
+<%- include('partials/navbar') %>
+
+<main id="konten">
+  <section class="mx-auto grid max-w-7xl gap-10 px-6 pb-14 pt-12 md:pt-20 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:gap-16 lg:pb-20" data-enter="hero">
+    <div>
+      <p class="mb-5 inline-flex items-center gap-2 border-2 border-tinta bg-kertas px-3 py-2 font-mono text-xs font-bold uppercase tracking-wide">
+        <span class="h-2.5 w-2.5 rounded-full bg-lime ring-2 ring-tinta"></span>
+        Sewa lapangan olahraga per jam
+      </p>
+      <h1 class="max-w-3xl text-5xl font-black uppercase leading-[0.94] tracking-tight sm:text-6xl lg:text-7xl">
+        Main bagus.<br><span class="inline-block bg-lime px-2 pb-1">Jadwal beres.</span>
+      </h1>
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-neutral-700">Cari lapangan yang cocok, pilih waktunya, lalu siapkan timmu. Semua informasi sewa tampil jelas sebelum kamu memesan.</p>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a href="#pilihan-lapangan" class="tombol-utama">Lihat pilihan lapangan <span aria-hidden="true" class="ml-3 text-lg">↘</span></a>
+        <a href="#cara-sewa" class="inline-flex min-h-11 items-center px-2 font-bold underline decoration-2 underline-offset-4">Cara sewa</a>
+      </div>
+      <p class="mt-8 font-mono text-xs font-bold uppercase tracking-wide text-neutral-600">BUKA SETIAP HARI <span class="mx-2 text-tinta">/</span> 08.00—22.00</p>
+    </div>
+
+    <section id="jadwal-preview" class="kartu-kertas relative p-5 sm:p-7" aria-labelledby="judul-jadwal-preview">
+      <div class="absolute -right-2 -top-2 h-full w-full border-2 border-tinta bg-lime" aria-hidden="true"></div>
+      <div class="relative bg-kertas">
+        <div class="flex flex-wrap items-start justify-between gap-3 border-b-2 border-tinta pb-4">
+          <div>
+            <p class="font-mono text-xs font-bold uppercase tracking-widest text-neutral-600">LAPANGAN PILIHAN</p>
+            <h2 id="judul-jadwal-preview" class="mt-1 text-2xl font-black uppercase"><%= lapanganUtama ? lapanganUtama.nama : 'Belum ada lapangan aktif' %></h2>
+          </div>
+          <span class="border-2 border-tinta bg-lime px-3 py-1 font-mono text-xs font-bold uppercase">Hari ini</span>
+        </div>
+
+        <div class="mt-5 flex items-center justify-between gap-3">
+          <div>
+            <p class="font-mono text-xs font-bold uppercase text-neutral-600">RABU, 25 NOVEMBER</p>
+            <p class="mt-1 text-sm font-semibold">Pilih durasi saat membuat booking</p>
+          </div>
+          <div class="flex gap-3 font-mono text-[10px] font-bold uppercase">
+            <span class="flex items-center gap-1.5"><i class="h-3 w-3 border border-tinta bg-white"></i>Kosong</span>
+            <span class="flex items-center gap-1.5"><i class="h-3 w-3 border border-tinta bg-neutral-300"></i>Terisi</span>
+          </div>
+        </div>
+
+        <div class="mt-4 grid grid-cols-4 gap-2 sm:grid-cols-7" aria-label="Pratinjau slot per jam">
+          <% const slotContoh = [
+            { jam: '08', isi: 'kosong' }, { jam: '09', isi: 'terisi' }, { jam: '10', isi: 'terisi' },
+            { jam: '11', isi: 'kosong' }, { jam: '12', isi: 'kosong' }, { jam: '13', isi: 'kosong' },
+            { jam: '14', isi: 'terisi' }, { jam: '15', isi: 'kosong' }, { jam: '16', isi: 'kosong' },
+            { jam: '17', isi: 'kosong' }, { jam: '18', isi: 'kosong' }, { jam: '19', isi: 'terisi' },
+            { jam: '20', isi: 'kosong' }, { jam: '21', isi: 'kosong' }
+          ]; %>
+          <% slotContoh.forEach((slot) => { %>
+            <div class="slot-preview-item min-h-[58px] border-2 border-tinta px-2 py-2 <%= slot.isi === 'terisi' ? 'bg-[repeating-linear-gradient(135deg,#d4d4d4_0px,#d4d4d4_5px,#f5f5f5_5px,#f5f5f5_10px)]' : 'bg-white' %>">
+              <p class="font-mono text-xs font-bold"><%= slot.jam %>.00</p>
+              <p class="mt-1 text-[9px] font-bold uppercase text-neutral-600"><%= slot.isi %></p>
+            </div>
+          <% }) %>
+        </div>
+
+        <div class="mt-5 flex flex-wrap items-center justify-between gap-3 border-t-2 border-tinta pt-4">
+          <p class="font-mono text-xs font-bold uppercase">LAMPU MENYALA MULAI <%= lapanganUtama ? lapanganUtama.lampu : '—' %></p>
+          <span class="border-2 border-tinta bg-kuning px-3 py-1 font-mono text-xs font-bold">MULAI RP<%= lapanganUtama ? lapanganUtama.harga : '—' %> / JAM</span>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <section class="border-y-2 border-tinta bg-tinta text-kertas">
+    <div class="mx-auto grid max-w-7xl grid-cols-1 divide-y-2 divide-neutral-700 px-6 sm:grid-cols-3 sm:divide-x-2 sm:divide-y-0">
+      <div class="py-5 sm:px-6 sm:first:pl-0"><p class="font-mono text-xs font-bold uppercase text-lime">PILIHAN OLAHRAGA</p><p class="mt-1 text-2xl font-black">7 jenis lapangan</p></div>
+      <div class="py-5 sm:px-6"><p class="font-mono text-xs font-bold uppercase text-lime">JAM OPERASIONAL</p><p class="mt-1 text-2xl font-black">08.00—22.00</p></div>
+      <div class="py-5 sm:px-6 sm:last:pr-0"><p class="font-mono text-xs font-bold uppercase text-lime">PILIH DURASI</p><p class="mt-1 text-2xl font-black">Mulai 1 jam</p></div>
+    </div>
+  </section>
+
+  <section id="pilihan-lapangan" class="mx-auto max-w-7xl px-6 py-16 lg:py-24">
+    <div class="mb-8 flex flex-wrap items-end justify-between gap-5">
+      <div>
+        <p class="mb-3 font-mono text-xs font-bold uppercase tracking-widest">CARI TEMPAT MAINMU</p>
+        <h2 class="text-4xl font-black uppercase tracking-tight sm:text-5xl">Lapangan pilihan</h2>
+      </div>
+      <span class="border-2 border-tinta bg-kertas px-3 py-2 font-mono text-xs font-bold uppercase"><%= lapanganContoh.length %> lapangan aktif</span>
+    </div>
+
+    <% if (lapanganContoh.length) { %>
+      <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <% lapanganContoh.forEach((lapangan, indeks) => { %>
+          <%- include('partials/kartu-lapangan', { lapangan, indeks }) %>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <p class="border-2 border-tinta bg-kertas p-6 font-bold">Belum ada lapangan aktif.</p>
+    <% } %>
+  </section>
+
+  <section id="cara-sewa" class="bg-[#e7dfcf] py-16 lg:py-20">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="max-w-2xl">
+        <p class="mb-3 font-mono text-xs font-bold uppercase tracking-widest">TIGA LANGKAH SEDERHANA</p>
+        <h2 class="text-4xl font-black uppercase tracking-tight sm:text-5xl">Dari cari sampai main</h2>
+      </div>
+      <ol class="mt-8 grid gap-5 md:grid-cols-3">
+        <% const alurSewa = [
+          { nomor: '01', judul: 'Pilih lapangan', isi: 'Tentukan jenis lapangan dan tanggal yang kamu inginkan.' },
+          { nomor: '02', judul: 'Atur waktunya', isi: 'Pilih jam mulai dan durasi. Biaya tampil sebelum booking.' },
+          { nomor: '03', judul: 'Konfirmasi booking', isi: 'Selesaikan pembayaran dan simpan bukti pemesananmu.' }
+        ]; %>
+        <% alurSewa.forEach((langkah) => { %>
+          <li class="kartu-kertas p-5 sm:p-6">
+            <span class="inline-flex h-10 w-10 items-center justify-center border-2 border-tinta bg-lime font-mono font-bold"><%= langkah.nomor %></span>
+            <h3 class="mt-5 text-xl font-black uppercase"><%= langkah.judul %></h3>
+            <p class="mt-2 leading-relaxed text-neutral-700"><%= langkah.isi %></p>
+          </li>
+        <% }) %>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>
+</body>
+</html>
