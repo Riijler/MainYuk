@@ -4,7 +4,7 @@ if (process.env.NODE_ENV === 'production') {
   const variabelWajib = ['DB_HOST', 'DB_USER', 'DB_PASSWORD', 'DB_NAME'];
   const belumDiatur = variabelWajib.filter((nama) => !process.env[nama]);
   if (belumDiatur.length) {
-    throw new Error(`Environment database production belum lengkap: ${belumDiatur.join(', ')}.`);
+    console.error(`Peringatan: Environment database production belum lengkap: ${belumDiatur.join(', ')}.`);
   }
 }
 

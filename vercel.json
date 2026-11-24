@@ -2,14 +2,14 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run css:build",
   "functions": {
-    "server.js": {
+    "api/index.js": {
       "includeFiles": "views/**"
     }
   },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/server.js"
+      "destination": "/api/index.js"
     }
   ]
 }
